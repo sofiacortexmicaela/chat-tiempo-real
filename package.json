@@ -1,8 +1,12 @@
 {
   "name": "moduloseis",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.js",
+   "engines": {
+     "node": "14.17.0",
+     "npm": "10.2.4"
   "scripts": {
+    "start": "node src/app.js"
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
