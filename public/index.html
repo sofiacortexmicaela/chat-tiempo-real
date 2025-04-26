@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat en Tiempo Real</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Conexión al servidor Socket.IO
+      const socket = io();
+
+      // Selección de elementos del DOM
+      const form = document.getElementById('form');
+      const input = document.getElementById('input');
+      const messagesDiv = document.getElementById('messages');
+
+      // Escuchar la lista de mensajes existente
+      socket.on('messageList', (messageList) => {
+        messagesDiv.innerHTML = ''; // Limpiar mensajes previos
+        messageList.forEach(msg => {
+          const messageElement = document.createElement('p');
+          messageElement.textContent = msg;
+          messagesDiv.appendChild(messageElement);
+        });
+      });
+
+      // Escuchar mensajes nuevos
+      socket.on('newMessage', (message) => {
+        const messageElement = document.createElement('p');
+        messageElement.textContent = message;
+        messagesDiv.appendChild(messageElement);
+      });
+
+      // Manejar el envío de mensajes
+      form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Evitar recargar la página
+        if (input.value.trim()) {
+          socket.emit('newMessage', input.value); // Enviar mensaje al servidor
+          input.value = ''; // Limpiar el campo de texto
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Chat en Tiempo Real</h1>
+  <div id="messages" style="border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll;">
+    <!-- Aquí se mostrarán los mensajes -->
+  </div>
+  <form id="form">
+    <input id="input" autocomplete="off" placeholder="Escribe un mensaje..." />
+    <button>Enviar</button>
+  </form>
+</body>
+</html>
